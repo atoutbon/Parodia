@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Paródia de Português</title>
+<style>
+:root{--bg:#fafaf8;--fg:#1c1c1a;--mut:#6b6b66;--line:#dddcd6;--card:#fff;--ac:#1c1c1a;--acfg:#fff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141413;--fg:#ecebe6;--mut:#9a9992;--line:#2e2e2b;--card:#1c1c1a;--ac:#ecebe6;--acfg:#141413;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#141413;--fg:#ecebe6;--mut:#9a9992;--line:#2e2e2b;--card:#1c1c1a;--ac:#ecebe6;--acfg:#141413;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:720px;margin:0 auto;padding:24px 18px 60px}
+h1{font-size:1.6rem;margin:0 0 4px;font-weight:600}
+.sub{color:var(--mut);margin:0 0 28px}
+section{border-top:1px solid var(--line);padding:22px 0}
+h2{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin:0 0 14px;font-weight:600}
+label{display:block;font-size:.9rem;margin:12px 0 4px}
+input,select,textarea{width:100%;font:inherit;color:var(--fg);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--ac);outline-offset:-1px}
+textarea{min-height:140px;resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:520px){.row{grid-template-columns:1fr}}
+.hint{font-size:.85rem;color:var(--mut);margin:4px 0 0}
+button{font:inherit;cursor:pointer;border-radius:8px;padding:10px 16px;border:1px solid var(--ac);background:var(--ac);color:var(--acfg)}
+button.ghost{background:transparent;color:var(--fg);border-color:var(--line)}
+.names{display:flex;flex-direction:column;gap:8px}
+.name-row{display:flex;gap:8px}
+.name-row button{padding:10px 12px}
+.item{border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:12px;background:var(--card)}
+.item label:first-child{margin-top:0}
+.item textarea{min-height:64px}
+.acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+#out{min-height:260px;font:14px/1.5 ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap}
+#msg{font-size:.9rem;color:var(--mut);margin-top:10px;min-height:1.4em}
+.steps{font-size:.9rem;color:var(--mut);padding-left:18px;margin:10px 0 0}
+</style>
+</head>
+<body>
+<main>
+<h1>Paródia de Português</h1>
+<p class="sub">Preencha as etapas, confira o relatório e envie no Google Classroom.</p>
+
+<section>
+<h2>1. Identificação</h2>
+<label>Integrantes</label>
+<div class="names" id="names"></div>
+<div class="acts"><button class="ghost" id="addName" type="button">+ Adicionar integrante</button></div>
+<div class="row">
+<div><label for="turma">Turma</label><input id="turma" placeholder="Ex.: 92"></div>
+<div><label for="conteudo">Conteúdo de Português</label>
+<select id="conteudo">
+<option value="">Escolha…</option>
+<option>Classes de palavras</option>
+<option>Sujeito e predicado</option>
+<option>Orações coordenadas</option>
+<option>Orações subordinadas</option>
+<option>Período composto</option>
+<option>Crase</option>
+<option>Concordância verbal e nominal</option>
+<option>Regência</option>
+<option>Figuras de linguagem</option>
+<option>Funções da linguagem</option>
+<option>Variação linguística</option>
+<option>Pontuação</option>
+<option>Outro</option>
+</select></div>
+</div>
+<label for="outro" id="outroL" hidden>Qual conteúdo?</label>
+<input id="outro" hidden>
+</section>
+
+<section>
+<h2>2. Música</h2>
+<div class="row">
+<div><label for="musica">Música original</label><input id="musica" placeholder="Título"></div>
+<div><label for="artista">Artista</label><input id="artista"></div>
+</div>
+<label for="titulo">Título da paródia</label>
+<input id="titulo">
+</section>
+
+<section>
+<h2>3. Letra da paródia</h2>
+<label for="letra">Escreva ou cole a letra</label>
+<textarea id="letra" placeholder="Uma linha por verso. Deixe uma linha em branco entre as estrofes."></textarea>
+<p class="hint">A letra deve ser de autoria do grupo. Não cole a letra original.</p>
+</section>
+
+<section>
+<h2>4. Conceitos na letra</h2>
+<p class="hint" style="margin:0 0 12px">Mostre onde o conteúdo aparece: copie um trecho, diga o conceito e explique.</p>
+<div id="items"></div>
+<div class="acts"><button class="ghost" id="addItem" type="button">+ Adicionar conceito</button></div>
+<label for="reflex">Como a paródia ajuda a lembrar o conteúdo?</label>
+<textarea id="reflex" style="min-height:90px"></textarea>
+</section>
+
+<section>
+<h2>5. Relatório</h2>
+<textarea id="out" readonly></textarea>
+<div class="acts">
+<button id="copy" type="button">Copiar relatório</button>
+<button class="ghost" id="print" type="button">Imprimir / salvar PDF</button>
+<button class="ghost" id="clear" type="button">Limpar tudo</button>
+</div>
+<div id="msg"></div>
+<ol class="steps">
+<li>Clique em “Copiar relatório”.</li>
+<li>No Classroom, abra a atividade e crie um Documento.</li>
+<li>Cole o texto e clique em “Entregar”.</li>
+</ol>
+</section>
+</main>
+
+<script>
+(function(){
+var $=function(id){return document.getElementById(id)};
+var KEY="parodia-rascunho";
+
+function addName(v){
+  var r=document.createElement("div");r.className="name-row";
+  r.innerHTML='<input class="nm" placeholder="Nome completo"><button class="ghost" type="button" title="Remover">×</button>';
+  r.querySelector("input").value=v||"";
+  r.querySelector("button").onclick=function(){if($("names").children.length>1){r.remove();update()}};
+  r.querySelector("input").oninput=update;
+  $("names").appendChild(r);
+}
+function addItem(d){
+  d=d||{};
+  var r=document.createElement("div");r.className="item";
+  r.innerHTML='<label>Trecho da letra</label><input class="t">'+
+  '<label>Conceito</label><input class="c" placeholder="Ex.: conjunção adversativa">'+
+  '<label>Explicação</label><textarea class="e"></textarea>'+
+  '<div class="acts"><button class="ghost rm" type="button">Remover</button></div>';
+  r.querySelector(".t").value=d.t||"";r.querySelector(".c").value=d.c||"";r.querySelector(".e").value=d.e||"";
+  r.querySelectorAll("input,textarea").forEach(function(x){x.oninput=update});
+  r.querySelector(".rm").onclick=function(){r.remove();update()};
+  $("items").appendChild(r);
+}
+function val(id){return $(id).value.trim()}
+function conteudo(){return $("conteudo").value==="Outro"?val("outro"):val("conteudo")}
+
+function build(){
+  var nomes=[].map.call(document.querySelectorAll(".nm"),function(x){return x.value.trim()}).filter(Boolean);
+  var L=[];
+  L.push("RELATÓRIO DE PARÓDIA — LÍNGUA PORTUGUESA","");
+  L.push("Integrantes: "+(nomes.join(", ")||"—"));
+  L.push("Turma: "+(val("turma")||"—"));
+  L.push("Conteúdo: "+(conteudo()||"—"),"");
+  L.push("Música original: "+(val("musica")||"—")+(val("artista")?" — "+val("artista"):""));
+  L.push("Título da paródia: "+(val("titulo")||"—"),"");
+  L.push("LETRA DA PARÓDIA","");
+  L.push(val("letra")||"—","");
+  var its=[].slice.call(document.querySelectorAll(".item")).map(function(i){
+    return {t:i.querySelector(".t").value.trim(),c:i.querySelector(".c").value.trim(),e:i.querySelector(".e").value.trim()};
+  }).filter(function(x){return x.t||x.c||x.e});
+  L.push("CONCEITOS NA LETRA","");
+  if(!its.length)L.push("—","");
+  its.forEach(function(x,i){
+    L.push((i+1)+". Trecho: “"+x.t+"”");
+    L.push("   Conceito: "+x.c);
+    L.push("   Explicação: "+x.e,"");
+  });
+  L.push("REFLEXÃO","");
+  L.push(val("reflex")||"—");
+  return L.join("\n");
+}
+function save(){
+  try{
+    var d={n:[].map.call(document.querySelectorAll(".nm"),function(x){return x.value}),
+      f:["turma","conteudo","outro","musica","artista","titulo","letra","reflex"].reduce(function(o,k){o[k]=$(k).value;return o},{}),
+      i:[].map.call(document.querySelectorAll(".item"),function(i){return{t:i.querySelector(".t").value,c:i.querySelector(".c").value,e:i.querySelector(".e").value}})};
+    localStorage.setItem(KEY,JSON.stringify(d));
+  }catch(e){}
+}
+function update(){
+  var o=$("conteudo").value==="Outro";
+  $("outro").hidden=!o;$("outroL").hidden=!o;
+  $("out").value=build();save();
+}
+function load(){
+  var d=null;
+  try{d=JSON.parse(localStorage.getItem(KEY)||"null")}catch(e){}
+  if(d){
+    (d.n&&d.n.length?d.n:[""]).forEach(addName);
+    Object.keys(d.f||{}).forEach(function(k){$(k).value=d.f[k]});
+    (d.i||[]).forEach(addItem);
+  }else{addName("");}
+  if(!document.querySelector(".item"))addItem();
+}
+["turma","conteudo","outro","musica","artista","titulo","letra","reflex"].forEach(function(k){
+  $(k).addEventListener("input",update);$(k).addEventListener("change",update);
+});
+$("addName").onclick=function(){addName("");update()};
+$("addItem").onclick=function(){addItem();update()};
+$("copy").onclick=function(){
+  var t=$("out").value,m=$("msg");
+  function ok(){m.textContent="Relatório copiado. Agora cole no Classroom."}
+  function fb(){
+    $("out").removeAttribute("readonly");$("out").select();
+    try{document.execCommand("copy")?ok():m.textContent="Selecione o texto e copie manualmente."}catch(e){m.textContent="Selecione o texto e copie manualmente."}
+    $("out").setAttribute("readonly","");
+  }
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(ok,fb)}else fb();
+};
+$("print").onclick=function(){
+  try{window.print()}catch(e){}
+  $("msg").textContent="Se a impressão não abrir, use “Copiar relatório” e cole em um documento.";
+};
+$("clear").onclick=function(){
+  if(!confirm("Apagar tudo?"))return;
+  try{localStorage.removeItem(KEY)}catch(e){}
+  location.reload();
+};
+load();update();
+})();
+</script>
+</body>
+</html>
